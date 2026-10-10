@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block title %}Baselines | NIDS{% endblock %}
+
+{% block content %}
+
+{% include "header.html" %}
+
+<div class="container">
+
+    <div class="page-title">
+        NETWORK BASELINES
+    </div>
+
+    <p class="subtitle">
+        Learned normal traffic behavior for observed source IP addresses.
+    </p>
+
+    {% if baselines %}
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Source IP</th>
+                    <th>Packets / Sec</th>
+                    <th>Bytes / Sec</th>
+                    <th>TCP / Sec</th>
+                    <th>UDP / Sec</th>
+                    <th>ICMP / Sec</th>
+                    <th>Unique Ports</th>
+                    <th>Destination IPs</th>
+                    <th>Samples</th>
+                    <th>Status</th>
+                    <th>Activity</th>
+                    <th>First Seen</th>
+                    <th>Last Seen</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for baseline in baselines %}
+
+                <tr>
+
+                    <td>
+                        {{ baseline.source_ip }}
+                    </td>
+
+                    <td>
+                        {{ baseline.packets_per_sec|floatformat:2 }}
+                    </td>
+
+                    <td>
+                        {{ baseline.bytes_per_sec|floatformat:2 }}
+                    </td>
+
+                    <td>
+                        {{ baseline.tcp_per_sec|floatformat:2 }}
+                    </td>
+
+                    <td>
+                        {{ baseline.udp_per_sec|floatformat:2 }}
+                    </td>
+
+                    <td>
+                        {{ baseline.icmp_per_sec|floatformat:2 }}
+                    </td>
+
+                    <td>
+                        {{ baseline.unique_ports|floatformat:2 }}
+                    </td>
+
+                    <td>
+                        {{ baseline.unique_destination_ips|floatformat:2 }}
+                    </td>
+
+                    <td>
+                        {{ baseline.sample_count }}
+                    </td>
+
+                    <td>
+
+                        <span class="status {{ baseline.status|lower|cut:' ' }}">
+                            {{ baseline.status }}
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="activity {{ baseline.activity|lower }}">
+                            {{ baseline.activity }}
+                        </span>
+
+                    </td>
+
+                    <td>
+                        {% if baseline.first_seen %}
+                            {{ baseline.first_seen|date:"d M Y, H:i:s" }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if baseline.last_seen %}
+                            {{ baseline.last_seen|date:"d M Y, H:i:s" }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-state">
+
+        <div class="empty-title">
+            No Baselines Available
+        </div>
+
+        <div class="empty-text">
+            Baselines will appear here after the NIDS engine
+            completes the learning process.
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+<style>
+
+.subtitle {
+    color: #94a3b8;
+    margin-top: -10px;
+    margin-bottom: 24px;
+}
+
+
+/* Table */
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #334155;
+    background-color: #1e293b;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 14px;
+    background-color: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 1px solid #334155;
+    white-space: nowrap;
+}
+
+td {
+    padding: 14px;
+    color: #e2e8f0;
+    font-size: 14px;
+    border-bottom: 1px solid #334155;
+    white-space: nowrap;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* Status */
+
+.status {
+    font-weight: 600;
+}
+
+.status.baselineready {
+    color: #4ade80;
+}
+
+.status.learning {
+    color: #fbbf24;
+}
+
+
+/* Activity */
+
+.activity {
+    font-weight: 600;
+}
+
+.activity.active {
+    color: #4ade80;
+}
+
+.activity.inactive {
+    color: #94a3b8;
+}
+
+
+/* Empty State */
+
+.empty-state {
+    border: 1px solid #334155;
+    background-color: #1e293b;
+    padding: 50px 30px;
+    text-align: center;
+}
+
+.empty-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 10px;
+}
+
+.empty-text {
+    color: #94a3b8;
+    font-size: 15px;
+}
+
+</style>
+
+{% endblock %}

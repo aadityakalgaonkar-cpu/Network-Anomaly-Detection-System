@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block title %}
+NIDS Dashboard
+{% endblock %}
+
+{% block content %}
+
+{% include "header.html" %}
+
+<main class="dashboard">
+
+    <div class="local-network">
+
+    <div class="network-title">
+        LOCAL NETWORK INTERFACES
+    </div>
+
+    <div class="ip-list">
+
+        {% for ip in local_ips %}
+
+            <div class="ip-row">
+
+                {% if ":" in ip %}
+                    {% if ip == "::1" %}
+                        <span class="ip-type">Loopback</span>
+                    {% else %}
+                        <span class="ip-type">IPv6</span>
+                    {% endif %}
+                {% else %}
+                    {% if ip == "127.0.0.1" %}
+                        <span class="ip-type">Loopback</span>
+                    {% else %}
+                        <span class="ip-type">IPv4</span>
+                    {% endif %}
+                {% endif %}
+
+                <span class="ip-separator">-</span>
+
+                <span class="ip-address">
+                    {{ ip }}
+                </span>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+    <div class="navigation-grid">
+
+        <a href="#" class="nav-box">
+            <h2>LIVE TRAFFIC</h2>
+            <p>Monitor live network activity</p>
+        </a>
+
+        <a href="#" class="nav-box">
+            <h2>FIXED ALERTS</h2>
+            <p>View rule-based threats</p>
+        </a>
+
+        <a href="#" class="nav-box">
+            <h2>BASELINES</h2>
+            <p>View learned network behaviour</p>
+        </a>
+
+        <a href="#" class="nav-box">
+            <h2>BASELINE ALERTS</h2>
+            <p>View behavioural anomalies</p>
+        </a>
+
+        <a href="#" class="nav-box">
+            <h2>OVERALL STATISTICS</h2>
+            <p>View network and session statistics</p>
+        </a>
+
+    </div>
+
+
+    <div class="system-status">
+        <span class="status-dot"></span>
+        NIDS ENGINE READY
+    </div>
+
+</main>
+
+
+<style>
+
+    .dashboard {
+        min-height: calc(100vh - 60px);
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        padding: 35px 40px;
+    }
+
+
+    .dashboard-heading {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+
+    .dashboard-heading h1 {
+        margin: 0;
+
+        font-size: 26px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+
+        color: #f8fafc;
+        white-space: nowrap;
+    }
+
+
+    .dashboard-heading p {
+        margin-top: 10px;
+
+        font-size: 15px;
+        color: #94a3b8;
+    }
+
+
+    .navigation-grid {
+    width: 100%;
+    max-width: 1050px;
+
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+
+    gap: 16px;
+
+    margin-top: 10px;
+    }
+
+    .nav-box {
+        height: 135px;
+
+        padding: 20px;
+
+        background-color: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 6px;
+
+        text-decoration: none;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        text-align: center;
+    }
+
+    .nav-box:nth-child(1),
+    .nav-box:nth-child(2),
+    .nav-box:nth-child(3) {
+        grid-column: span 2;
+    }
+
+    .nav-box:nth-child(4) {
+        grid-column: 2 / span 2;
+    }
+
+    .nav-box:nth-child(5) {
+        grid-column: 4 / span 2;
+    }
+
+    .nav-box:hover {
+        border-color: #38bdf8;
+    }
+
+    .nav-box h2 {
+        margin: 0 0 8px 0;
+
+        font-size: 16px;
+        font-weight: 600;
+
+        color: #f8fafc;
+    }
+
+    .nav-box p {
+        margin: 0;
+
+        font-size: 13px;
+        line-height: 1.4;
+
+        color: #94a3b8;
+    }
+
+
+    .system-status {
+        margin-top: 30px;
+
+        font-size: 14px;
+        color: #94a3b8;
+
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+
+        border-radius: 50%;
+
+        background-color: #38bdf8;
+    }
+
+    .local-network {
+    margin-top: 20px;
+    }
+
+    .network-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #cbd5e1;
+        margin-bottom: 10px;
+    }
+
+    .ip-list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .ip-row {
+        display: flex;
+        align-items: center;
+
+        font-size: 13px;
+    }
+
+    .ip-type {
+        width: 75px;
+        text-align: right;
+        color: #cbd5e1;
+    }
+
+    .ip-separator {
+        margin: 0 8px;
+        color: #64748b;
+    }
+
+    .ip-address {
+        min-width: 220px;
+        color: #94a3b8;
+    }
+</style>
+
+{% endblock %}

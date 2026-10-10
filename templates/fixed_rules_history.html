@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Fixed Rules History</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #38bdf8;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+
+        /* ==============================
+           REPORT BOX
+        ============================== */
+
+        .report-box {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+
+            padding: 22px;
+
+            margin-bottom: 30px;
+        }
+
+        .report-box h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+
+            font-size: 20px;
+            color: #f8fafc;
+        }
+
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+
+            gap: 18px;
+
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+        .filter-group label {
+            font-size: 13px;
+            color: #cbd5e1;
+        }
+
+
+        /* ==============================
+           INPUTS / DROPDOWNS
+        ============================== */
+
+        input,
+        select {
+
+            background-color: #0f172a;
+
+            color: #f8fafc;
+
+            border: 1px solid #475569;
+
+            border-radius: 5px;
+
+            padding: 9px 11px;
+
+            min-width: 190px;
+
+            outline: none;
+
+            font-size: 14px;
+        }
+
+        input:focus,
+        select:focus {
+
+            border-color: #38bdf8;
+        }
+
+        select {
+
+            cursor: pointer;
+        }
+
+
+        /* ==============================
+           REPORT BUTTON
+        ============================== */
+
+        .report-button {
+
+            margin-top: 20px;
+
+            background-color: #38bdf8;
+
+            color: #0f172a;
+
+            border: none;
+
+            border-radius: 5px;
+
+            padding: 10px 18px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            font-size: 14px;
+        }
+
+        .report-button:hover {
+
+            background-color: #0ea5e9;
+        }
+
+
+        /* ==============================
+           TABLE
+        ============================== */
+
+        .table-container {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+            background-color: #1e293b;
+
+            border: 1px solid #334155;
+
+            border-radius: 8px;
+        }
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 1200px;
+        }
+
+        th,
+        td {
+
+            padding: 12px 14px;
+
+            border-bottom: 1px solid #334155;
+
+            text-align: left;
+
+            white-space: nowrap;
+        }
+
+        th {
+
+            background-color: #334155;
+
+            color: #f8fafc;
+
+            font-size: 14px;
+        }
+
+        td {
+
+            color: #cbd5e1;
+
+            font-size: 14px;
+        }
+
+        tr:hover td {
+
+            background-color: #273449;
+        }
+
+        .empty {
+
+            text-align: center;
+
+            padding: 30px;
+
+            color: #94a3b8;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- ==============================
+         BACK BUTTON
+    ============================== -->
+
+    <a href="{% url 'history' %}" class="back-link">
+
+        ← Back to History
+
+    </a>
+
+
+    <h1>
+
+        Fixed Rules History
+
+    </h1>
+
+
+
+    <!-- ==============================
+         GENERATE REPORT
+    ============================== -->
+
+    <div class="report-box">
+
+        <h2>
+
+            Generate Report
+
+        </h2>
+
+
+        <form
+            method="get"
+            action="{% url 'fixed_rules_report' %}"
+        >
+
+
+            <div class="filter-row">
+
+
+                <!-- ALERT TYPE -->
+
+                <div class="filter-group">
+
+                    <label>
+                        Alert Type
+                    </label>
+
+
+                    <select name="alert_type">
+
+                        <option value="">
+                            All
+                        </option>
+
+                        <option value="PORT_SCAN">
+                            PORT_SCAN
+                        </option>
+
+                        <option value="TRAFFIC_FLOOD">
+                            TRAFFIC_FLOOD
+                        </option>
+
+                        <option value="UDP_FLOOD">
+                            UDP_FLOOD
+                        </option>
+
+                        <option value="ICMP_FLOOD">
+                            ICMP_FLOOD
+                        </option>
+
+                        <option value="CONNECTION_BURST">
+                            CONNECTION_BURST
+                        </option>
+
+                        <option value="SYN_FLOOD">
+                            SYN_FLOOD
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- SEVERITY -->
+
+                <div class="filter-group">
+
+                    <label>
+                        Severity
+                    </label>
+
+
+                    <select name="severity">
+
+                        <option value="">
+                            All
+                        </option>
+
+                        <option value="LOW">
+                            LOW
+                        </option>
+
+                        <option value="MEDIUM">
+                            MEDIUM
+                        </option>
+
+                        <option value="HIGH">
+                            HIGH
+                        </option>
+
+                        <option value="CRITICAL">
+                            CRITICAL
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- SOURCE IP -->
+
+                <div class="filter-group">
+
+                    <label>
+                        Source IP
+                    </label>
+
+
+                    <input
+                        type="text"
+                        name="source_ip"
+                        placeholder="192.168.1.10"
+                    >
+
+                </div>
+
+
+
+                <!-- STATUS -->
+
+                <div class="filter-group">
+
+                    <label>
+                        Status
+                    </label>
+
+
+                    <select name="status">
+
+                        <option value="">
+                            All
+                        </option>
+
+                        <option value="ACTIVE">
+                            ACTIVE
+                        </option>
+
+                        <option value="RESOLVED">
+                            RESOLVED
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- DOWNLOAD -->
+
+            <button
+                type="submit"
+                class="report-button"
+            >
+
+                DOWNLOAD CSV REPORT
+
+            </button>
+
+
+        </form>
+
+    </div>
+
+
+
+    <!-- ==============================
+         HISTORY TABLE
+    ============================== -->
+
+    <div class="table-container">
+
+
+        <table>
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Session ID
+                    </th>
+
+                    <th>
+                        Alert Type
+                    </th>
+
+                    <th>
+                        Source IP
+                    </th>
+
+                    <th>
+                        Severity
+                    </th>
+
+                    <th>
+                        Reason
+                    </th>
+
+                    <th>
+                        Observed
+                    </th>
+
+                    <th>
+                        Threshold
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Time
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+
+            <tbody>
+
+
+                {% for alert in alerts %}
+
+
+                <tr>
+
+
+                    <td>
+                        {{ alert.session_id }}
+                    </td>
+
+
+                    <td>
+                        {{ alert.alert_type }}
+                    </td>
+
+
+                    <td>
+                        {{ alert.source_ip }}
+                    </td>
+
+
+                    <td>
+                        {{ alert.severity }}
+                    </td>
+
+
+                    <td>
+                        {{ alert.reason }}
+                    </td>
+
+
+                    <td>
+                        {{ alert.observed }}
+                    </td>
+
+
+                    <td>
+                        {{ alert.threshold }}
+                    </td>
+
+
+                    <td>
+                        {{ alert.status }}
+                    </td>
+
+
+                    <td>
+                        {{ alert.timestamp }}
+                    </td>
+
+
+                </tr>
+
+
+                {% empty %}
+
+
+                <tr>
+
+                    <td
+                        colspan="9"
+                        class="empty"
+                    >
+
+                        No fixed rule alerts found in database.
+
+                    </td>
+
+                </tr>
+
+
+                {% endfor %}
+
+
+            </tbody>
+
+
+        </table>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ==============================
+     AUTO REFRESH
+     EVERY 30 SECONDS
+============================== -->
+
+<script>
+
+    setTimeout(function () {
+
+        window.location.reload();
+
+    }, 30000);
+
+</script>
+
+
+</body>
+
+</html>

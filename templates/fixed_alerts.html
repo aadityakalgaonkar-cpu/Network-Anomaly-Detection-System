@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}Fixed Alerts | NIDS{% endblock %}
+
+{% block content %}
+
+{% include "header.html" %}
+
+<div class="container">
+
+    <div class="page-title">
+        FIXED RULE ALERTS
+    </div>
+
+    <p class="subtitle">
+        Security alerts detected by predefined NIDS rules during the current session.
+    </p>
+
+    {% if alerts %}
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Alert Type</th>
+                    <th>Source IP</th>
+                    <th>Severity</th>
+                    <th>Reason</th>
+                    <th>Observed</th>
+                    <th>Threshold</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for alert in alerts %}
+
+                <tr>
+
+                    <td>
+                        {{ alert.alert_type }}
+                    </td>
+
+                    <td>
+                        {{ alert.source_ip }}
+                    </td>
+
+                    <td>
+                        <span class="severity {{ alert.severity|lower }}">
+                            {{ alert.severity }}
+                        </span>
+                    </td>
+
+                    <td>
+                        {{ alert.reason }}
+                    </td>
+
+                    <td>
+                        {{ alert.observed }}
+                    </td>
+
+                    <td>
+                        {{ alert.threshold }}
+                    </td>
+
+                    <td>
+                        {{ alert.timestamp|date:"d M Y, H:i:s" }}
+                    </td>
+
+                    <td>
+                        {{ alert.status }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-state">
+
+        <div class="empty-title">
+            No Active Alerts
+        </div>
+
+        <div class="empty-text">
+            No fixed-rule security alerts have been detected
+            during the current NIDS session.
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+<style>
+
+.subtitle {
+    color: #94a3b8;
+    margin-top: -10px;
+    margin-bottom: 24px;
+}
+
+
+/* Alert Table */
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #334155;
+    background-color: #1e293b;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 14px;
+    background-color: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 1px solid #334155;
+    white-space: nowrap;
+}
+
+td {
+    padding: 14px;
+    color: #e2e8f0;
+    font-size: 14px;
+    border-bottom: 1px solid #334155;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* Severity */
+
+.severity {
+    font-weight: 600;
+}
+
+.severity.high {
+    color: #f87171;
+}
+
+.severity.medium {
+    color: #fbbf24;
+}
+
+.severity.low {
+    color: #4ade80;
+}
+
+
+/* Empty State */
+
+.empty-state {
+    border: 1px solid #334155;
+    background-color: #1e293b;
+    padding: 50px 30px;
+    text-align: center;
+}
+
+.empty-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 10px;
+}
+
+.empty-text {
+    color: #94a3b8;
+    font-size: 15px;
+}
+
+</style>
+
+{% endblock %}

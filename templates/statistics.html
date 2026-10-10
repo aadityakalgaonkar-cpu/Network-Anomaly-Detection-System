@@ -1,0 +1,415 @@
+{% extends "base.html" %}
+
+{% block title %}Overall Statistics | NIDS{% endblock %}
+
+{% block content %}
+
+{% include "header.html" %}
+
+<div class="container">
+
+    <div class="page-title">
+        OVERALL STATISTICS
+    </div>
+
+    <p class="subtitle">
+        Cumulative network statistics for the current NIDS session.
+    </p>
+
+    {% if session %}
+
+    <div class="stats-grid">
+
+        <div class="stat-box">
+            <div class="stat-label">TOTAL PACKETS</div>
+            <div class="stat-value" id="total-packets">
+                {{ session.total_packets }}
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-label">TOTAL BYTES</div>
+            <div class="stat-value" id="total-bytes">
+                {{ session.total_bytes }}
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-label">SOURCE IPs</div>
+            <div class="stat-value" id="unique-source-ips">
+                {{ session.unique_source_ips }}
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-label">DESTINATION IPs</div>
+            <div class="stat-value" id="unique-destination-ips">
+                {{ session.unique_destination_ips }}
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-label">ACTIVE SOURCES</div>
+            <div class="stat-value" id="active-sources">
+                {{ session.active_sources }}
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="section-title">
+        PROTOCOL STATISTICS
+    </div>
+
+    <div class="stats-grid">
+
+        <div class="stat-box">
+            <div class="stat-label">TCP</div>
+            <div class="stat-value" id="total-tcp">
+                {{ session.total_tcp }}
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-label">SYN</div>
+            <div class="stat-value" id="total-syn">
+                {{ session.total_syn }}
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-label">UDP</div>
+            <div class="stat-value" id="total-udp">
+                {{ session.total_udp }}
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-label">ICMP</div>
+            <div class="stat-value" id="total-icmp">
+                {{ session.total_icmp }}
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-label">OTHER</div>
+            <div class="stat-value" id="total-other">
+                {{ session.total_other }}
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="section-title">
+        TRAFFIC DIRECTION
+    </div>
+
+    <div class="stats-grid">
+
+        <div class="stat-box">
+            <div class="stat-label">INCOMING</div>
+            <div class="stat-value" id="total-incoming">
+                {{ session.total_incoming }}
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-label">OUTGOING</div>
+            <div class="stat-value" id="total-outgoing">
+                {{ session.total_outgoing }}
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-label">LOCAL</div>
+            <div class="stat-value" id="total-local">
+                {{ session.total_local }}
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-label">OTHER DIRECTION</div>
+            <div class="stat-value" id="total-other-direction">
+                {{ session.total_other_direction }}
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="session-info">
+
+        <div>
+            <span>SESSION STARTED</span>
+
+            <strong>
+                {{ session.started_at|date:"d M Y, H:i:s" }}
+            </strong>
+        </div>
+
+        <div>
+            <span>SESSION STATUS</span>
+
+            <strong id="session-status">
+
+                {% if session.stopped_at %}
+                    STOPPED
+                {% else %}
+                    RUNNING
+                {% endif %}
+
+            </strong>
+        </div>
+
+    </div>
+
+
+    {% else %}
+
+    <div class="empty-state">
+
+        <div class="empty-title">
+            No Active NIDS Session
+        </div>
+
+        <div class="empty-text">
+            Start the NIDS engine to begin collecting network statistics.
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+<style>
+
+.subtitle {
+    color: #94a3b8;
+    margin-top: -10px;
+    margin-bottom: 24px;
+}
+
+
+/* Statistics Grid */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+
+/* Statistics Box */
+
+.stat-box {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    padding: 22px;
+    min-height: 100px;
+}
+
+.stat-label {
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.stat-value {
+    color: #f8fafc;
+    font-size: 26px;
+    font-weight: 600;
+}
+
+
+/* Section Title */
+
+.section-title {
+    color: #f8fafc;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 10px 0 16px;
+}
+
+
+/* Session Information */
+
+.session-info {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+
+    background-color: #1e293b;
+    border: 1px solid #334155;
+
+    padding: 20px;
+}
+
+.session-info div {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.session-info span {
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.session-info strong {
+    color: #e2e8f0;
+    font-size: 15px;
+}
+
+
+/* Empty State */
+
+.empty-state {
+    border: 1px solid #334155;
+    background-color: #1e293b;
+
+    padding: 50px 30px;
+
+    text-align: center;
+}
+
+.empty-title {
+    font-size: 20px;
+    font-weight: 600;
+
+    color: #f8fafc;
+
+    margin-bottom: 10px;
+}
+
+.empty-text {
+    color: #94a3b8;
+    font-size: 15px;
+}
+
+
+/* Responsive */
+
+@media (max-width: 900px) {
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+</style>
+
+
+{% if session %}
+
+<script>
+
+const socket = new WebSocket(
+    "ws://" + window.location.host + "/ws/nids/"
+);
+
+
+socket.onopen = function() {
+
+    console.log("Statistics WebSocket Connected");
+
+};
+
+
+socket.onmessage = function(event) {
+
+    const message = JSON.parse(event.data);
+
+    console.log("NIDS DATA:", message);
+
+
+    /* Ignore traffic and other WebSocket messages */
+
+    if (message.type !== "statistics") {
+        return;
+    }
+
+
+    /* General Statistics */
+
+    document.getElementById("total-packets").textContent =
+        message.total_packets;
+
+    document.getElementById("total-bytes").textContent =
+        message.total_bytes;
+
+    document.getElementById("unique-source-ips").textContent =
+        message.unique_source_ips;
+
+    document.getElementById("unique-destination-ips").textContent =
+        message.unique_destination_ips;
+
+    document.getElementById("active-sources").textContent =
+        message.active_sources;
+
+
+    /* Protocol Statistics */
+
+    document.getElementById("total-tcp").textContent =
+        message.total_tcp;
+
+    document.getElementById("total-syn").textContent =
+        message.total_syn;
+
+    document.getElementById("total-udp").textContent =
+        message.total_udp;
+
+    document.getElementById("total-icmp").textContent =
+        message.total_icmp;
+
+    document.getElementById("total-other").textContent =
+        message.total_other;
+
+
+    /* Traffic Direction */
+
+    document.getElementById("total-incoming").textContent =
+        message.total_incoming;
+
+    document.getElementById("total-outgoing").textContent =
+        message.total_outgoing;
+
+    document.getElementById("total-local").textContent =
+        message.total_local;
+
+    document.getElementById("total-other-direction").textContent =
+        message.total_other_direction;
+
+};
+
+
+socket.onerror = function(error) {
+
+    console.log(
+        "Statistics WebSocket Error:",
+        error
+    );
+
+};
+
+
+socket.onclose = function() {
+
+    console.log(
+        "Statistics WebSocket Disconnected"
+    );
+
+};
+
+</script>
+
+{% endif %}
+
+{% endblock %}

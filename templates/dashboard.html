@@ -1,0 +1,559 @@
+```html
+{% extends "base.html" %}
+
+{% block title %}
+NIDS Dashboard
+{% endblock %}
+
+{% block content %}
+
+{% include "header.html" %}
+
+<!-- ALERT POPUP CONTAINER -->
+<div id="alert-container" class="alert-container"></div>
+
+<main class="dashboard">
+
+    <!-- NIDS Heading -->
+    <div class="dashboard-heading">
+        <h1>NETWORK INTRUSION DETECTION SYSTEM</h1>
+        <p>Network Security Monitoring Panel</p>
+    </div>
+
+    <!-- Local Network Information -->
+    <div class="local-network">
+
+        <div class="network-title">
+            LOCAL NETWORK INTERFACES
+        </div>
+
+        <div class="network-groups">
+
+            <!-- IPv4 -->
+            <div class="network-group">
+                <div class="network-type">IPv4</div>
+
+                {% for ip in local_ips %}
+                    {% if ":" not in ip and ip != "127.0.0.1" %}
+                        <div class="network-address">{{ ip }}</div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- IPv6 -->
+            <div class="network-group">
+                <div class="network-type">IPv6</div>
+
+                {% for ip in local_ips %}
+                    {% if ":" in ip and ip != "::1" %}
+                        <div class="network-address">{{ ip }}</div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- Loopback -->
+            <div class="network-group">
+                <div class="network-type">Loopback</div>
+                <div class="network-address">127.0.0.1</div>
+                <div class="network-address">::1</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation-grid">
+
+        <a href="{% url 'live_traffic' %}" class="nav-box">
+            <h2>LIVE TRAFFIC</h2>
+            <p>Monitor live network activity</p>
+        </a>
+
+        <a href="{% url 'fixed_alerts' %}" class="nav-box">
+            <h2>FIXED ALERTS</h2>
+            <p>View rule-based threats</p>
+        </a>
+
+        <a href="{% url 'baselines' %}" class="nav-box">
+            <h2>BASELINES</h2>
+            <p>View learned network behaviour</p>
+        </a>
+
+        <a href="{% url 'baseline_alerts' %}" class="nav-box">
+            <h2>BASELINE ALERTS</h2>
+            <p>View behavioural anomalies</p>
+        </a>
+
+        <a href="{% url 'statistics' %}" class="nav-box">
+            <h2>OVERALL STATISTICS</h2>
+            <p>View network and session statistics</p>
+        </a>
+
+        <a href="{% url 'history' %}" class="nav-box">
+            <h2>History of Alerts and Packets</h2>
+            <p>View Alerts and Packets History</p>
+        </a>
+
+    </div>
+
+    <!-- System Status -->
+    <div class="system-status">
+        <span class="status-dot"></span>
+        NIDS ENGINE READY
+    </div>
+
+</main>
+
+
+<style>
+
+    /* =========================
+       Dashboard
+       ========================= */
+
+    .dashboard {
+        min-height: calc(100vh - 60px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 40px;
+    }
+
+    /* =========================
+       Heading
+       ========================= */
+
+    .dashboard-heading {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .dashboard-heading h1 {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        color: #f8fafc;
+        white-space: nowrap;
+    }
+
+    .dashboard-heading p {
+        margin-top: 8px;
+        font-size: 15px;
+        color: #94a3b8;
+    }
+
+    /* =========================
+       Local Network
+       ========================= */
+
+    .local-network {
+        width: 100%;
+        max-width: 1050px;
+        margin-top: 5px;
+        margin-bottom: 25px;
+    }
+
+    .network-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #cbd5e1;
+        margin-bottom: 12px;
+    }
+
+    .network-groups {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 50px;
+    }
+
+    .network-group {
+        min-width: 220px;
+    }
+
+    .network-type {
+        font-size: 14px;
+        font-weight: 600;
+        color: #f8fafc;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #334155;
+        margin-bottom: 6px;
+    }
+
+    .network-address {
+        font-size: 13px;
+        color: #94a3b8;
+        padding: 3px 0;
+        word-break: break-all;
+    }
+
+    /* =========================
+       Navigation
+       ========================= */
+
+    .navigation-grid {
+        width: 100%;
+        max-width: 1050px;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 16px;
+    }
+
+    .nav-box {
+        height: 125px;
+        padding: 20px;
+        background-color: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 6px;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    /* First row */
+    .nav-box:nth-child(1),
+    .nav-box:nth-child(2),
+    .nav-box:nth-child(3) {
+        grid-column: span 2;
+    }
+
+    /* Second row */
+    .nav-box:nth-child(4) {
+        grid-column: 2 / span 2;
+    }
+
+    .nav-box:nth-child(5) {
+        grid-column: 4 / span 2;
+    }
+
+    .nav-box:nth-child(6) {
+        grid-column: 2 / span 4;
+    }
+
+    .nav-box:hover {
+        border-color: #38bdf8;
+    }
+
+    .nav-box h2 {
+        margin: 0 0 8px 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #f8fafc;
+    }
+
+    .nav-box p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.4;
+        color: #94a3b8;
+    }
+
+    /* =========================
+       System Status
+       ========================= */
+
+    .system-status {
+        margin-top: 22px;
+        font-size: 14px;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #38bdf8;
+    }
+
+    /* =========================
+       Alert Notifications
+       ========================= */
+
+    .alert-container {
+        position: fixed;
+        right: 22px;
+        bottom: 22px;
+        width: 320px;
+        max-width: calc(100vw - 32px);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        pointer-events: none;
+    }
+
+    .alert-toast {
+        background: #1e293b;
+        border: 1px solid #475569;
+        border-left: 4px solid #f97316;
+        border-radius: 8px;
+        padding: 13px 14px;
+        color: #f8fafc;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+        pointer-events: auto;
+        animation: alertSlideIn 0.25s ease-out;
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+
+    .alert-toast.baseline {
+        border-left-color: #eab308;
+    }
+
+    .alert-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 7px;
+    }
+
+    .alert-category {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: #fb923c;
+    }
+
+    .alert-toast.baseline .alert-category {
+        color: #facc15;
+    }
+
+    .alert-close {
+        background: transparent;
+        border: none;
+        color: #cbd5e1;
+        font-size: 19px;
+        cursor: pointer;
+        padding: 0 3px;
+    }
+
+    .alert-close:hover {
+        color: white;
+    }
+
+    .alert-name {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .alert-details {
+        font-size: 12px;
+        color: #cbd5e1;
+        line-height: 1.5;
+        white-space: pre-line;
+    }
+
+    @keyframes alertSlideIn {
+        from {
+            opacity: 0;
+            transform: translateX(15px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* =========================
+       Responsive Layout
+       ========================= */
+
+    @media (max-width: 900px) {
+        .dashboard {
+            padding: 25px 20px;
+        }
+
+        .dashboard-heading h1 {
+            font-size: 22px;
+            white-space: normal;
+        }
+
+        .navigation-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .nav-box:nth-child(n) {
+            grid-column: auto;
+        }
+
+        .network-groups {
+            gap: 25px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .dashboard {
+            padding: 20px 14px;
+        }
+
+        .navigation-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .nav-box:nth-child(n) {
+            grid-column: auto;
+        }
+
+        .network-group {
+            min-width: 0;
+            width: 100%;
+        }
+
+        .alert-container {
+            right: 12px;
+            bottom: 12px;
+            max-width: calc(100vw - 24px);
+        }
+    }
+
+</style>
+
+
+<script>
+(function () {
+
+    /*
+     * These initial IDs come from dashboard().
+     * Existing alerts won't pop up when the dashboard first opens.
+     */
+
+    let lastFixedId = Number(
+        "{{ latest_fixed_alert_id|default:0 }}"
+    );
+
+    let lastBaselineId = Number(
+        "{{ latest_baseline_alert_id|default:0 }}"
+    );
+
+    const pollUrl = "{% url 'dashboard_alert_poll' %}";
+    const container = document.getElementById("alert-container");
+
+    if (!container) {
+        return;
+    }
+
+    function showAlert(alert) {
+
+        const toast = document.createElement("div");
+
+        const isBaseline = alert.category === "BASELINE ALERT";
+
+        toast.className = "alert-toast" +
+            (isBaseline ? " baseline" : "");
+
+        const top = document.createElement("div");
+        top.className = "alert-top";
+
+        const category = document.createElement("span");
+        category.className = "alert-category";
+        category.textContent = alert.category;
+
+        const close = document.createElement("button");
+        close.className = "alert-close";
+        close.type = "button";
+        close.textContent = "\u00d7";
+        close.setAttribute("aria-label", "Close alert");
+
+        close.addEventListener("click", function () {
+            toast.remove();
+        });
+
+        top.appendChild(category);
+        top.appendChild(close);
+
+        const name = document.createElement("div");
+        name.className = "alert-name";
+        name.textContent =
+            alert.alert_type + " \u00b7 " + alert.severity;
+
+        const details = document.createElement("div");
+        details.className = "alert-details";
+        details.textContent =
+            "Source: " + alert.source_ip + "\n" + alert.reason;
+
+        toast.appendChild(top);
+        toast.appendChild(name);
+        toast.appendChild(details);
+
+        container.appendChild(toast);
+
+        // Automatically dismiss after 8 seconds.
+        setTimeout(function () {
+            toast.remove();
+        }, 8000);
+
+        // Keep no more than four notifications visible.
+        while (container.children.length > 4) {
+            container.firstElementChild.remove();
+        }
+    }
+
+    async function checkAlerts() {
+
+        try {
+
+            const url = new URL(
+                pollUrl,
+                window.location.origin
+            );
+
+            url.searchParams.set("fixed_id", lastFixedId);
+            url.searchParams.set("baseline_id", lastBaselineId);
+
+            const response = await fetch(url.toString(), {
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                cache: "no-store"
+            });
+
+            if (!response.ok) {
+                return;
+            }
+
+            const data = await response.json();
+
+            if (!Array.isArray(data.alerts)) {
+                return;
+            }
+
+            for (const alert of data.alerts) {
+                showAlert(alert);
+            }
+
+            lastFixedId = Math.max(
+                lastFixedId,
+                Number(data.latest_fixed_id) || 0
+            );
+
+            lastBaselineId = Math.max(
+                lastBaselineId,
+                Number(data.latest_baseline_id) || 0
+            );
+
+        } catch (error) {
+            console.error(
+                "Could not check NIDS alerts:",
+                error
+            );
+        }
+    }
+
+    // Check for newly stored alerts every 3 seconds.
+    setInterval(checkAlerts, 3000);
+
+})();
+</script>
+
+{% endblock %}
+```

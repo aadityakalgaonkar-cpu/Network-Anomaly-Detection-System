@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+
+{% block title %}
+About Us
+{% endblock %}
+
+{% block content %}
+
+{% include "header.html" %}
+
+
+<!-- HERO SECTION -->
+
+<div
+    style="
+        padding:60px 20px;
+        text-align:center;
+    "
+>
+
+    <h1
+        style="
+            font-size:50px;
+            color:white;
+            margin-bottom:20px;
+        "
+    >
+        About Network Intrusion Detection System
+    </h1>
+
+    <p
+        style="
+            max-width:900px;
+            margin:auto;
+            color:#cbd5e1;
+            font-size:18px;
+            line-height:1.8;
+        "
+    >
+        Our Network Intrusion Detection System (NIDS) is a real-time
+        network monitoring and security platform designed to capture,
+        analyze, and detect suspicious network activity. The system
+        monitors network packets, identifies potential attacks,
+        maintains traffic baselines, and provides alerts and historical
+        information through a web-based dashboard.
+    </p>
+
+</div>
+
+
+<!-- TEAM SECTION -->
+
+<div
+    style="
+        padding:20px;
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+        gap:25px;
+    "
+>
+
+
+    <!-- FRONTEND DEVELOPER -->
+
+    <div class="card" style="text-align:center;">
+
+        <img
+            src="/media/ps.jpg"
+            style="
+                width:180px;
+                height:180px;
+                object-fit:cover;
+                border-radius:50%;
+                margin-bottom:20px;
+                border:4px solid #334155;
+            "
+        >
+
+        <h2 style="color:white; margin-bottom:10px;">
+            Pranav Satale
+        </h2>
+
+        <p style="color:#38bdf8; margin-bottom:15px; font-weight:bold;">
+            Frontend Developer
+        </p>
+
+        <p style="color:#cbd5e1; line-height:1.7;">
+            Designed and developed the complete frontend of the NIDS
+            platform including the dashboard, navigation, live traffic
+            interface, alert pages, baseline pages, statistics,
+            history pages, packet history, report interfaces,
+            login interface, and overall user experience.
+        </p>
+
+        <p style="color:#cbd5e1; line-height:1.7;">
+            Technologies used:
+            HTML, CSS, JavaScript and Django Templates.
+        </p>
+
+        <br>
+
+        <p style="color:#cbd5e1; line-height:1.7;">
+            Follow us on
+        </p>
+
+        <a
+            href="https://www.instagram.com/13.panyaaa/"
+            target="_blank"
+            style="
+                display:inline-block;
+                margin-top:20px;
+                text-decoration:none;
+                color:white;
+                background:#e1306c;
+                padding:10px 20px;
+                border-radius:10px;
+            "
+        >
+            Instagram
+        </a>
+
+    </div>
+
+
+
+    <!-- BACKEND DEVELOPER -->
+
+    <div class="card" style="text-align:center;">
+
+        <img
+            src="/media/ad.jpg"
+            style="
+                width:180px;
+                height:180px;
+                object-fit:cover;
+                border-radius:50%;
+                margin-bottom:20px;
+                border:4px solid #334155;
+            "
+        >
+
+        <h2 style="color:white; margin-bottom:10px;">
+            Aaditya Kalgaonkar
+        </h2>
+
+        <p style="color:#38bdf8; margin-bottom:15px; font-weight:bold;">
+            Backend, Detection Engine & System Developer
+        </p>
+
+        <p style="color:#cbd5e1; line-height:1.7;">
+            Developed the complete backend and core security architecture
+            of the NIDS. This includes real-time packet capture,
+            packet analysis, traffic classification, fixed-rule attack
+            detection, baseline learning, anomaly detection, alert
+            generation, session management, database storage, history,
+            reporting, authentication, and backend integration.
+        </p>
+
+        <p style="color:#cbd5e1; line-height:1.7;">
+            Implemented detection for threats such as Port Scanning,
+            Traffic Flooding, UDP Flooding, ICMP Flooding, SYN Flooding,
+            and Connection Bursts, along with baseline-based anomaly
+            detection using network traffic behaviour.
+        </p>
+
+        <p style="color:#cbd5e1; line-height:1.7;">
+            Technologies used:
+            Python, Django, Scapy, Npcap, SQLite, Django ORM,
+            Django Channels, WebSockets and Daphne.
+        </p>
+
+        <br>
+
+        <p style="color:#cbd5e1; line-height:1.7;">
+            Follow us on
+        </p>
+
+        <a
+            href="https://www.instagram.com/aaditya_kalgaonkar/"
+            target="_blank"
+            style="
+                display:inline-block;
+                margin-top:20px;
+                text-decoration:none;
+                color:white;
+                background:#e1306c;
+                padding:10px 20px;
+                border-radius:10px;
+            "
+        >
+            Instagram
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- TECHNOLOGY SECTION -->
+
+<div
+    style="
+        padding:40px 20px;
+        text-align:center;
+    "
+>
+
+    <h2
+        style="
+            color:white;
+            font-size:32px;
+            margin-bottom:20px;
+        "
+    >
+        Technologies Used
+    </h2>
+
+    <p
+        style="
+            max-width:1000px;
+            margin:auto;
+            color:#cbd5e1;
+            line-height:1.8;
+            font-size:17px;
+        "
+    >
+        Python • Django • Scapy • Npcap • SQLite • Django ORM •
+        Django Channels • WebSockets • Daphne • HTML • CSS • JavaScript
+    </p>
+
+</div>
+
+
+<!-- FOOTER -->
+
+<div
+    style="
+        text-align:center;
+        padding:30px;
+        color:#94a3b8;
+    "
+>
+
+    © 2026 Network Intrusion Detection System. All Rights Reserved.
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}Baseline Alerts | NIDS{% endblock %}
+
+{% block content %}
+
+{% include "header.html" %}
+
+<div class="container">
+
+    <div class="page-title">
+        BASELINE ALERTS
+    </div>
+
+    <p class="subtitle">
+        Anomalies detected when network activity significantly exceeds the learned baseline.
+    </p>
+
+    {% if alerts %}
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Source IP</th>
+                    <th>Severity</th>
+                    <th>Abnormal Metrics</th>
+                    <th>Packets/Sec</th>
+                    <th>Baseline Packets/Sec</th>
+                    <th>Bytes/Sec</th>
+                    <th>Baseline Bytes/Sec</th>
+                    <th>TCP/Sec</th>
+                    <th>Baseline TCP/Sec</th>
+                    <th>UDP/Sec</th>
+                    <th>Baseline UDP/Sec</th>
+                    <th>ICMP/Sec</th>
+                    <th>Baseline ICMP/Sec</th>
+                    <th>Unique Ports</th>
+                    <th>Baseline Ports</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for alert in alerts %}
+
+                <tr>
+
+                    <td>{{ alert.source_ip }}</td>
+
+                    <td>
+                        <span class="severity {{ alert.severity|lower }}">
+                            {{ alert.severity }}
+                        </span>
+                    </td>
+
+                    <td>{{ alert.abnormal_metrics }}</td>
+
+                    <td>{{ alert.current_packets_per_sec|floatformat:2 }}</td>
+                    <td>{{ alert.baseline_packets_per_sec|floatformat:2 }}</td>
+
+                    <td>{{ alert.current_bytes_per_sec|floatformat:2 }}</td>
+                    <td>{{ alert.baseline_bytes_per_sec|floatformat:2 }}</td>
+
+                    <td>{{ alert.current_tcp_per_sec|floatformat:2 }}</td>
+                    <td>{{ alert.baseline_tcp_per_sec|floatformat:2 }}</td>
+
+                    <td>{{ alert.current_udp_per_sec|floatformat:2 }}</td>
+                    <td>{{ alert.baseline_udp_per_sec|floatformat:2 }}</td>
+
+                    <td>{{ alert.current_icmp_per_sec|floatformat:2 }}</td>
+                    <td>{{ alert.baseline_icmp_per_sec|floatformat:2 }}</td>
+
+                    <td>{{ alert.current_unique_ports }}</td>
+                    <td>{{ alert.baseline_unique_ports|floatformat:2 }}</td>
+
+                    <td>{{ alert.timestamp|date:"d M Y, H:i:s" }}</td>
+
+                    <td>{{ alert.status }}</td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-state">
+
+        <div class="empty-title">
+            No Baseline Alerts
+        </div>
+
+        <div class="empty-text">
+            No abnormal network activity has been detected
+            against the learned baselines during the current NIDS session.
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+<style>
+
+.subtitle {
+    color: #94a3b8;
+    margin-top: -10px;
+    margin-bottom: 24px;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #334155;
+    background-color: #1e293b;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 14px;
+    background-color: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 1px solid #334155;
+    white-space: nowrap;
+}
+
+td {
+    padding: 14px;
+    color: #e2e8f0;
+    font-size: 14px;
+    border-bottom: 1px solid #334155;
+    white-space: nowrap;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.severity {
+    font-weight: 600;
+}
+
+.severity.high {
+    color: #f87171;
+}
+
+.severity.medium {
+    color: #fbbf24;
+}
+
+.severity.low {
+    color: #4ade80;
+}
+
+.empty-state {
+    border: 1px solid #334155;
+    background-color: #1e293b;
+    padding: 50px 30px;
+    text-align: center;
+}
+
+.empty-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 10px;
+}
+
+.empty-text {
+    color: #94a3b8;
+    font-size: 15px;
+}
+
+</style>
+
+{% endblock %}

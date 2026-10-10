@@ -1,0 +1,596 @@
+{% extends "base.html" %}
+
+{% block title %}
+Live Traffic
+{% endblock %}
+
+{% block content %}
+
+{% include "header.html" %}
+
+<main class="live-page">
+
+    <!-- Page Header -->
+    <div class="page-header">
+
+        <div>
+            <h1>LIVE TRAFFIC</h1>
+
+            <p>
+                Real-time network traffic monitored by the NIDS engine
+            </p>
+        </div>
+
+        <div class="connection-status">
+
+            <span id="status-dot"></span>
+
+            <span id="status-text">
+                CONNECTING
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- Summary Cards -->
+    <div class="summary-grid">
+
+        <div class="summary-card">
+
+            <div class="summary-label">
+                TOTAL PACKETS
+            </div>
+
+            <div class="summary-value" id="total-packets">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-label">
+                TOTAL BYTES
+            </div>
+
+            <div class="summary-value" id="total-bytes">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-label">
+                ACTIVE SOURCES
+            </div>
+
+            <div class="summary-value" id="active-sources">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-label">
+                LAST UPDATE
+            </div>
+
+            <div class="summary-value small" id="last-update">
+                --
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Traffic Table -->
+
+    <div class="section-title">
+        CURRENT NETWORK TRAFFIC
+    </div>
+
+
+    <div class="traffic-table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Source IP</th>
+
+                    <th>Packets</th>
+
+                    <th>Packets / Sec</th>
+
+                    <th>Bytes</th>
+
+                    <th>TCP</th>
+
+                    <th>UDP</th>
+
+                    <th>ICMP</th>
+
+                    <th>SYN</th>
+
+                    <th>Incoming</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="traffic-table">
+
+                <tr>
+
+                    <td colspan="9" class="empty-message">
+
+                        Waiting for network traffic...
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+</main>
+
+
+<style>
+
+/* =========================
+   Main Page
+   ========================= */
+
+.live-page {
+
+    min-height: calc(100vh - 60px);
+
+    padding: 30px 40px;
+
+}
+
+
+/* =========================
+   Header
+   ========================= */
+
+.page-header {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+
+}
+
+
+.page-header h1 {
+
+    margin: 0;
+
+    font-size: 24px;
+
+    font-weight: 600;
+
+    color: #f8fafc;
+
+}
+
+
+.page-header p {
+
+    margin: 8px 0 0 0;
+
+    font-size: 14px;
+
+    color: #94a3b8;
+
+}
+
+
+/* =========================
+   Connection Status
+   ========================= */
+
+.connection-status {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 13px;
+
+    color: #94a3b8;
+
+}
+
+
+#status-dot {
+
+    width: 8px;
+
+    height: 8px;
+
+    border-radius: 50%;
+
+    background-color: #94a3b8;
+
+}
+
+
+/* =========================
+   Summary
+   ========================= */
+
+.summary-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 16px;
+
+    margin-bottom: 30px;
+
+}
+
+
+.summary-card {
+
+    background-color: #1e293b;
+
+    border: 1px solid #334155;
+
+    border-radius: 6px;
+
+    padding: 18px 20px;
+
+}
+
+
+.summary-label {
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    color: #94a3b8;
+
+    margin-bottom: 8px;
+
+}
+
+
+.summary-value {
+
+    font-size: 22px;
+
+    font-weight: 600;
+
+    color: #f8fafc;
+
+}
+
+
+.summary-value.small {
+
+    font-size: 16px;
+
+}
+
+
+/* =========================
+   Section
+   ========================= */
+
+.section-title {
+
+    margin-bottom: 12px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: #cbd5e1;
+
+}
+
+
+/* =========================
+   Table
+   ========================= */
+
+.traffic-table-container {
+
+    width: 100%;
+
+    border: 1px solid #334155;
+
+    border-radius: 6px;
+
+    overflow: hidden;
+
+}
+
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    background-color: #1e293b;
+
+}
+
+
+th {
+
+    padding: 13px 12px;
+
+    text-align: left;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    color: #cbd5e1;
+
+    background-color: #172235;
+
+    border-bottom: 1px solid #334155;
+
+}
+
+
+td {
+
+    padding: 12px;
+
+    font-size: 13px;
+
+    color: #94a3b8;
+
+    border-bottom: 1px solid #334155;
+
+}
+
+
+tbody tr:last-child td {
+
+    border-bottom: none;
+
+}
+
+
+tbody tr:hover {
+
+    background-color: #263449;
+
+}
+
+
+.empty-message {
+
+    text-align: center;
+
+    padding: 30px;
+
+    color: #64748b;
+
+}
+
+
+</style>
+
+
+<script>
+
+/* =========================
+   WebSocket Connection
+   ========================= */
+
+const socket = new WebSocket(
+    "ws://" + window.location.host + "/ws/nids/"
+);
+
+
+/* =========================
+   Connected
+   ========================= */
+
+socket.onopen = function() {
+
+    document.getElementById("status-text").textContent =
+        "CONNECTED";
+
+    document.getElementById("status-dot").style.backgroundColor =
+        "#38bdf8";
+
+};
+
+
+/* =========================
+   Receive NIDS Data
+   ========================= */
+
+socket.onmessage = function(event) {
+
+    const data = JSON.parse(event.data);
+
+    console.log("NIDS DATA:", data);
+
+
+    /*
+       Ignore connection messages
+       and security alerts.
+
+       Live Traffic only needs
+       traffic messages.
+    */
+
+    if (data.type !== "traffic") {
+
+        return;
+
+    }
+
+
+    const traffic = data.traffic;
+
+
+    /* =========================
+       Update Summary
+       ========================= */
+
+    let totalPackets = 0;
+
+    let totalBytes = 0;
+
+    let activeSources = traffic.length;
+
+
+    traffic.forEach(function(item) {
+
+        totalPackets += item.packets;
+
+        totalBytes += item.bytes;
+
+    });
+
+
+    document.getElementById("total-packets").textContent =
+        totalPackets.toLocaleString();
+
+
+    document.getElementById("total-bytes").textContent =
+        totalBytes.toLocaleString();
+
+
+    document.getElementById("active-sources").textContent =
+        activeSources;
+
+
+    document.getElementById("last-update").textContent =
+        new Date().toLocaleTimeString();
+
+
+    /* =========================
+       Update Table
+       ========================= */
+
+    const table = document.getElementById("traffic-table");
+
+
+    table.innerHTML = "";
+
+
+    if (traffic.length === 0) {
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td colspan="9" class="empty-message">
+
+                    No recent network traffic
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    traffic.forEach(function(item) {
+
+        const row = document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>${item.source_ip}</td>
+
+            <td>${item.packets.toLocaleString()}</td>
+
+            <td>${item.packets_per_sec.toFixed(2)}</td>
+
+            <td>${item.bytes.toLocaleString()}</td>
+
+            <td>${item.tcp}</td>
+
+            <td>${item.udp}</td>
+
+            <td>${item.icmp}</td>
+
+            <td>${item.syn}</td>
+
+            <td>${item.incoming_packets}</td>
+
+        `;
+
+
+        table.appendChild(row);
+
+    });
+
+};
+
+
+/* =========================
+   WebSocket Error
+   ========================= */
+
+socket.onerror = function() {
+
+    document.getElementById("status-text").textContent =
+        "CONNECTION ERROR";
+
+    document.getElementById("status-dot").style.backgroundColor =
+        "#ef4444";
+
+};
+
+
+/* =========================
+   WebSocket Closed
+   ========================= */
+
+socket.onclose = function() {
+
+    document.getElementById("status-text").textContent =
+        "DISCONNECTED";
+
+    document.getElementById("status-dot").style.backgroundColor =
+        "#94a3b8";
+
+};
+
+</script>
+
+{% endblock %}
